@@ -87,8 +87,21 @@ function writeMessage(ctx, options) {
 }
 
 function writeEnum(ctx, options) {
-    return '\n' + compileExport(ctx, options) + ' ' +
-        JSON.stringify(ctx._proto.values, null, 4) + ';\n';
+    var bits = [];
+    bits.push("{\n    ");
+    var i = 0;
+    for(let k in ctx._proto.values) {
+        if(i++) {
+            bits.push(",\n    ");
+        }
+        bits.push(k);
+        bits.push(": ");
+        bits.push(JSON.stringify(ctx._proto.values[k].value));
+    }
+    bits.push("\n}");
+    var s = bits.join("");
+
+    return '\n' + compileExport(ctx, options) + ' ' + s + ';\n';
 }
 
 function compileExport(ctx, options) {
