@@ -208,7 +208,7 @@ Pbf.prototype = {
         else if (type === Pbf.Bytes) this.pos = this.readVarint() + this.pos;
         else if (type === Pbf.Fixed32) this.pos += 4;
         else if (type === Pbf.Fixed64) this.pos += 8;
-        else throw new Error('Unimplemented type: ' + type);
+        else throw TypeError;
     },
 
     // === WRITING =================================================================
@@ -411,7 +411,7 @@ function readVarintRemainder(l, s, p) {
     b = buf[p.pos++]; h |= (b & 0x7f) << 24; if (b < 0x80) return toNum(l, h, s);
     b = buf[p.pos++]; h |= (b & 0x01) << 31; if (b < 0x80) return toNum(l, h, s);
 
-    throw new Error('Expected varint not more than 10 bytes');
+    throw RangeError;
 }
 
 function readPackedEnd(pbf) {
@@ -446,7 +446,7 @@ function writeBigVarint(val, pbf) {
     }
 
     if (val >= 0x10000000000000000 || val < -0x10000000000000000) {
-        throw new Error('Given varint doesn\'t fit into 10 bytes');
+        throw RangeError;
     }
 
     pbf.realloc(10);
