@@ -230,7 +230,7 @@ Pbf.prototype = {
         }
     },
 
-    finish: function() {
+    finalize: function() {
         this.length = this.pos;
         this.pos = 0;
         return this.buf.subarray(0, this.length);
