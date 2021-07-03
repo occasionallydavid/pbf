@@ -79,13 +79,13 @@ Pbf.prototype = {
     },
 
     readFloat: function() {
-        var val = ieee754.read(this.buf, this.pos, true, 23, 4);
+        var val = ieee754.unpack(this.buf, this.pos, true, 23, 4);
         this.pos += 4;
         return val;
     },
 
     readDouble: function() {
-        var val = ieee754.read(this.buf, this.pos, true, 52, 8);
+        var val = ieee754.unpack(this.buf, this.pos, true, 52, 8);
         this.pos += 8;
         return val;
     },
@@ -307,13 +307,13 @@ Pbf.prototype = {
 
     writeFloat: function(val) {
         this.realloc(4);
-        ieee754.write(this.buf, val, this.pos, true, 23, 4);
+        ieee754.pack(this.buf, val, this.pos, true, 23, 4);
         this.pos += 4;
     },
 
     writeDouble: function(val) {
         this.realloc(8);
-        ieee754.write(this.buf, val, this.pos, true, 52, 8);
+        ieee754.pack(this.buf, val, this.pos, true, 52, 8);
         this.pos += 8;
     },
 
