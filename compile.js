@@ -42,7 +42,7 @@ function writeMessage(ctx, options) {
     }
 
     if (!options.noRead) {
-        code += name + '.read = function (pbf, end) {\n';
+        code += name + '.decode = function (pbf, end) {\n';
         code += '    return pbf.readFields(' + name + '._readField, ' + compileDest(ctx) + ', end);\n';
         code += '};\n';
         code += name + '._readField = function (tag, obj, pbf) {\n';
@@ -70,7 +70,7 @@ function writeMessage(ctx, options) {
     }
 
     if (!options.noWrite) {
-        code += name + '.write = function (obj, pbf) {\n';
+        code += name + '.encode = function (obj, pbf) {\n';
         numRepeated = 0;
         for (i = 0; i < fields.length; i++) {
             field = fields[i];
@@ -156,7 +156,7 @@ function fieldShouldUseStringAsNumber(field) {
 function compileFieldRead(ctx, field) {
     var type = getType(ctx, field);
     if (type) {
-        if (type._proto.fields) return type._name + '.read(pbf, pbf.readVarint() + pbf.pos)';
+        if (type._proto.fields) return type._name + '.decode(pbf, pbf.readVarint() + pbf.pos)';
         if (!isEnum(type)) throw new Error('Unexpected type: ' + type._name);
     }
 
@@ -211,7 +211,7 @@ function compileFieldWrite(ctx, field, name) {
 
     var type = getType(ctx, field);
     if (type) {
-        if (type._proto.fields) return prefix + 'Message(' + field.tag + ', ' + type._name + '.write, ' + name + ')';
+        if (type._proto.fields) return prefix + 'Message(' + field.tag + ', ' + type._name + '.encode, ' + name + ')';
         if (type._proto.values) return prefix + 'Varint' + postfix;
         throw new Error('Unexpected type: ' + type._name);
     }
